@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Weapon and Violence Detection</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; text-align: center; }
+    #video { border: 1px solid #222; max-width: 100%; }
+    #screenshots { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+    #screenshots img { max-width: 180px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>Live Weapon and Violence Detection</h1>
+  <img id="video" src="{{ url_for('video_feed') }}" alt="Video Feed"/>
+  <h2>Captured Weapon Screenshots</h2>
+  <div id="screenshots"></div>
+
+  <script>
+    async function loadScreenshots() {
+      const response = await fetch('/screenshots');
+      const images = await response.json();
+      const container = document.getElementById('screenshots');
+      container.innerHTML = '';
+      images.forEach(url => {
+        const img = document.createElement('img');
+        img.src = url + '?t=' + new Date().getTime();
+        container.appendChild(img);
+      });
+    }
+    loadScreenshots();
+    setInterval(loadScreenshots, 15000);
+  </script>
+</body>
+</html>
